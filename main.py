@@ -47,44 +47,43 @@ class Graph():
     def hamilton(self):
         path = [-1] * self.V
  
-        ''' Let us put vertex 0 as the first vertex
-            in the path. If there is a Hamiltonian Cycle,
-            then the path can be started from any point
-            of the cycle as the graph is undirected '''
+        #Menjadikan vertex 0 sebagai starter
         path[0] = 0
  
         if self.rekursifHam(path,1) == False:
-            print ("Solution does not exist\n")
+            print ("Solusi tidak ditemukan\n")
             return False
  
-        self.printSolution(path)
+        self.printSolusi(path)
         return True
  
-    def printSolution(self, path):
-        print ("Solution Exists: Following",
-                 "is one Hamiltonian Cycle")
+    def printSolusi(self, path):
+        print ("Solusi Ditemukan : ")
+        n = 'A'
         for vertex in path:
-            print (vertex, end = " ")
-        print (path[0], "\n")
- 
+            print (chr(ord(n) + vertex), end = "-")
+            n = 'A'
+        print (chr(ord(n) + path[0]), "\n")
 
+
+     
 print("Banyak vertex : ")
 vertex = int(input())
 
-print([-1] * vertex)
-
 g1 = Graph(vertex)
 alp = 'A'
+
 
 # Initialize matrix
 matrix = []
   
 # For user input
-for i in range(vertex):          # A for loop for row entries
+
+for i in range(vertex):          # Masukkan baris
     print("Masukkan ketetanggaan dari", alp)
     a =[]
     alp2 = 'A'
-    for j in range(vertex):      # A for loop for column entri
+    for j in range(vertex):      # Masukkan kolom
         print(alp, "dengan", alp2, ":")
         a.append(int(input()))
         alp2 = chr(ord(alp2) + 1)
