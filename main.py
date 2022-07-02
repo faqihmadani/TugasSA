@@ -1,3 +1,5 @@
+import time
+
 # Backtracking
 
 class Graph():
@@ -5,7 +7,8 @@ class Graph():
         self.graph = [[0 for column in range(vertex)]
                             for row in range(vertex)]
         self.V = vertex
-      
+
+    #Backtracking
     def aman(self, v, pos, path):
         # Mengecek apakah vertex tersebut merupakan tetangga 
         if self.graph[ path[pos-1] ][v] == 0:
@@ -45,9 +48,10 @@ class Graph():
         return False
  
     def hamilton(self):
+        start_time = time.time()
         path = [-1] * self.V
  
-        #Menjadikan vertex 0 sebagai starter
+        #Menjadikan vertex A sebagai starter
         path[0] = 0
  
         if self.rekursifHam(path,1) == False:
@@ -55,6 +59,7 @@ class Graph():
             return False
  
         self.printSolusi(path)
+        print("Waktu untuk menyelesaikan program ini adalah", time.time() - start_time, "detik")
         return True
  
     def printSolusi(self, path):
@@ -64,9 +69,54 @@ class Graph():
             print (chr(ord(n) + vertex), end = "-")
             n = 'A'
         print (chr(ord(n) + path[0]), "\n")
-
-
+        
+    # Dynamic Programming
+    def dynamicProgramming(self):
      
+      dp = [[False for i in range(1 << self.V)]
+                   for j in range(self.V)]
+   
+      # Setting dp[i][(1 << i)] menjadi true
+      for i in range(self.V):
+          dp[i][1 << i] = True
+   
+      # Iterasi ke seluruh subset dari suatu nodes
+      for i in range(1 << self.V):
+          for j in range(self.V):
+   
+              # Jika nodes ke j termasuk dalam subset
+              if ((i & (1 << j)) != 0):
+   
+                  # Mencari tetangga dari j juga terdapat pada subset
+                  for k in range(self.V):
+                      if ((i & (1 << k)) != 0 and
+                               self.graph[k][j] == 1 and
+                                       j != k and
+                            dp[k][i ^ (1 << j)]):
+                           
+                          # Update dp[j][i]
+                          # to true
+                          dp[j][i] = True
+                          break
+       
+      # Traverse the vertices
+      for i in range(self.V):
+   
+          # Hamiltonian ditemukan
+          if (dp[i][(1 << self.V) - 1]):
+              return True
+   
+      # Jika tidak return false
+      return False
+
+    def printDynamicProgramming(self):
+      start_time = time.time()
+      if self.dynamicProgramming():
+        print("Ya, terdapat hamiltonian circuit")
+      else:
+        print("Tidak terdapat hamiltonian circuit")
+      print("Waktu untuk menyelesaikan program ini adalah", time.time() - start_time, "detik")
+      
 print("Banyak vertex : ")
 vertex = int(input())
 
@@ -92,6 +142,15 @@ for i in range(vertex):          # Masukkan baris
 
 g1.graph = matrix
 print(g1.graph)
-g1.hamilton()
 
-
+ulang = 'Y'
+while(ulang == 'Y'):
+  print("\n Selesaikan menggunakan algoritma :\n1. Backtracking\n2. Dynamic Programming")
+  pilihan = int(input())
+  if pilihan == 1:
+    g1.hamilton()
+  elif pilihan == 2:
+    print("jalankan dynamic programming:")
+    g1.printDynamicProgramming()
+  print("Apakah anda ingin mengulangi lagi? Y/N")
+  ulang = input()
